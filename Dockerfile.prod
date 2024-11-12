@@ -1,0 +1,15 @@
+FROM golang:1.23-bookworm AS builder
+
+RUN --mount=source=go.mod,target=go.mod \
+    --mount=source=go.sum,target=go.sum \
+    go mod download
+
+
+RUN --mount=source=.,target=. \
+    go build -o /go/bin/main .
+
+FROM gcr.io/distroless/cc:latest
+
+COPY --from=builder /go/bin/main /go/bin/main
+
+CMD ["/go/bin/main"]

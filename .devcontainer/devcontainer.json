@@ -1,0 +1,23 @@
+{
+    "name": "go-template",
+    "dockerComposeFile": "../docker-compose.dev.yml",
+    "service": "app",
+    "workspaceFolder": "/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go"
+            ],
+            "settings": {
+                "[go]": {
+                    "editor.insertSpaces": false,
+                    "editor.tabSize": 4
+                },
+                "go.formatTool": "goimports",
+                "editor.formatOnSave": true
+            }
+        }
+    },
+    "postCreateCommand": "chsh -s /usr/bin/fish",
+    "postAttachCommand": "fish"
+}

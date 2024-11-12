@@ -18,6 +18,5 @@
             }
         }
     },
-    "postCreateCommand": "chsh -s /usr/bin/fish",
-    "postAttachCommand": "fish"
+    "postCreateCommand": "apt-get update && apt-get install -y fish"
 }

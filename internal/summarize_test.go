@@ -10,22 +10,24 @@ func TestSummarizeRequestCountByURI(t *testing.T) {
 	t.Parallel()
 	tc := []struct {
 		name string
-		internal.Logs
+		internal.Log
 		expected map[string]int
 	}{
 		{
 			"10 logs",
-			internal.Logs{
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
+			internal.Log{
+				Details: []internal.Detail{
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+				},
 			},
 			map[string]int{
 				"/": 10,
@@ -33,15 +35,17 @@ func TestSummarizeRequestCountByURI(t *testing.T) {
 		},
 		{
 			"8 logs",
-			internal.Logs{
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/"},
-				{URI: "/serach"},
-				{URI: "/serach"},
-				{URI: "/serach"},
-				{URI: "/serach"},
+			internal.Log{
+				Details: []internal.Detail{
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/"},
+					{URI: "/serach"},
+					{URI: "/serach"},
+					{URI: "/serach"},
+					{URI: "/serach"},
+				},
 			},
 			map[string]int{
 				"/":       4,
@@ -50,7 +54,7 @@ func TestSummarizeRequestCountByURI(t *testing.T) {
 		},
 		{
 			"empty logs",
-			internal.Logs{},
+			internal.Log{},
 			map[string]int{},
 		},
 	}
@@ -58,7 +62,7 @@ func TestSummarizeRequestCountByURI(t *testing.T) {
 	for _, c := range tc {
 		t.Run(c.name, func(t *testing.T) {
 			t.Parallel()
-			actual := internal.SummarizeRequestCountByURI(c.Logs)
+			actual := internal.SummarizeRequestCountByURI(c.Log)
 			if len(actual) != len(c.expected) {
 				t.Errorf("unexpected length. expected: %d, actual: %d", len(c.expected), len(actual))
 			}

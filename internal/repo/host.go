@@ -1,7 +1,11 @@
 package repo
 
-import "github.com/ei-sugimoto/datapuppy/internal/domain"
+import (
+	"context"
+
+	"github.com/ei-sugimoto/datapuppy/internal/domain"
+)
 
 type HostRepo interface {
-	Create(*domain.Host) (*domain.Host, error)
+	Create(context.Context, *domain.Host) (*domain.Host, error)
 }

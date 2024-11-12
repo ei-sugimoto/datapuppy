@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -17,7 +18,7 @@ func NewHostImpl(db *sql.DB) repo.HostRepo {
 
 }
 
-func (h *HostImpl) Create(host *domain.Host) (*domain.Host, error) {
+func (h *HostImpl) Create(ctx context.Context, host *domain.Host) (*domain.Host, error) {
 	res, err := h.db.Exec("INSERT INTO hosts (name, port) VALUES (?, ?)", host.Name, host.Port)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to insert a host: %w", err)

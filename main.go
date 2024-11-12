@@ -1,7 +1,10 @@
+/*
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+*/
 package main
 
-import "log"
+import "github.com/ei-sugimoto/datapuppy/cmd"
 
 func main() {
-	log.Println("Start DataPuppy")
+	cmd.Execute()
 }

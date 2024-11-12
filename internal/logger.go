@@ -44,3 +44,19 @@ func (l *Logger) UpsertLogToFile(log Log) error {
 
 	return nil
 }
+
+func (l *Logger) GetLogsFromFile() (Logs, error) {
+	file, err := os.Open("/var/log/datapuppy.json")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var logs Logs
+	decoder := json.NewDecoder(file)
+	if err := decoder.Decode(&logs); err != nil {
+		return nil, err
+	}
+
+	return logs, nil
+}

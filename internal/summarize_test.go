@@ -4,73 +4,48 @@ import (
 	"testing"
 
 	"github.com/ei-sugimoto/datapuppy/internal"
+	"github.com/ei-sugimoto/datapuppy/internal/helper"
 )
 
-func TestSummarizeRequestCountByURI(t *testing.T) {
-	t.Parallel()
+func TestSummarizeByURI(t *testing.T) {
+
 	tc := []struct {
 		name string
-		internal.Log
-		expected map[string]int
+		log  internal.Log
+		want map[string]internal.SummarizeURI
 	}{
 		{
-			"10 logs",
-			internal.Log{
-				Details: []internal.Detail{
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
+			name: "normal",
+			log:  helper.DummyLog,
+			want: map[string]internal.SummarizeURI{
+				"/": {
+					Count:      2,
+					MaxLatency: 200,
+				},
+				"/search": {
+					Count:      1,
+					MaxLatency: 300,
 				},
 			},
-			map[string]int{
-				"/": 10,
-			},
-		},
-		{
-			"8 logs",
-			internal.Log{
-				Details: []internal.Detail{
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/"},
-					{URI: "/serach"},
-					{URI: "/serach"},
-					{URI: "/serach"},
-					{URI: "/serach"},
-				},
-			},
-			map[string]int{
-				"/":       4,
-				"/serach": 4,
-			},
-		},
-		{
-			"empty logs",
-			internal.Log{},
-			map[string]int{},
 		},
 	}
 
-	for _, c := range tc {
-		t.Run(c.name, func(t *testing.T) {
+	for _, tt := range tc {
+		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			actual := internal.SummarizeRequestCountByURI(c.Log)
-			if len(actual) != len(c.expected) {
-				t.Errorf("unexpected length. expected: %d, actual: %d", len(c.expected), len(actual))
+			got := internal.SummarizeByURI(tt.log)
+			if len(got) != len(tt.want) {
+				t.Errorf("unexpected length: got %d, want %d", len(got), len(tt.want))
 			}
-			for k, v := range c.expected {
-				if actual[k] != v {
-					t.Errorf("unexpected value. key: %s, expected: %d, actual: %d", k, v, actual[k])
+			for k, v := range tt.want {
+				if got[k].Count != v.Count {
+					t.Errorf("unexpected count: got %d, want %d", got[k].Count, v.Count)
+				}
+				if got[k].MaxLatency != v.MaxLatency {
+					t.Errorf("unexpected max latency: got %d, want %d", got[k].MaxLatency, v.MaxLatency)
 				}
 			}
 		})
 	}
+
 }

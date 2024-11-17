@@ -13,37 +13,22 @@ import (
 
 // uricountCmd represents the uricount command
 var uricountCmd = &cobra.Command{
-	Use:   "uricount",
-	Short: "Counts the number of accesses per URI.",
-	Long:  `Counts the number of accesses per URI.`,
+	Use:   "uri",
+	Short: "get information about uri",
+	Long:  `get information about uri",`,
 	Run: func(cmd *cobra.Command, args []string) {
-		newLog := internal.Detail{
-			ID:        "1",
-			Time:      "2024-01-01T00:00:00Z",
-			RemoteIP:  "127.0.0.1",
-			Host:      "example.com",
-			Method:    "GET",
-			UserAgent: "Mozilla/5.0",
-			Status:    200,
-			Latency:   100,
-		}
 		logger := internal.NewLogger()
-		err := logger.UpsertLogToFile(&newLog)
-		if err != nil {
-			slog.Error(err.Error())
-			return
-		}
-
 		logs, err := logger.GetLogsFromFile()
 		if err != nil {
 			slog.Error(err.Error())
 			return
 		}
 
-		uriCount := internal.SummarizeRequestCountByURI(*logs)
+		uris := internal.SummarizeByURI(*logs)
 		fmt.Println("🔍 URI, Counting...  🤖")
-		for uri, count := range uriCount {
-			fmt.Printf("uri:%s\n\tcount:%d\n", uri, count)
+		for uri, val := range uris {
+			fmt.Printf("URI: %s\nCount: %d\nMaxLatency: %d\n", uri, val.Count, val.MaxLatency)
+			fmt.Println("====================================")
 		}
 
 	},
